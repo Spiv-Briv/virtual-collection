@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="can_width">64dp</dimen>
+    <dimen name="can_height">80dp</dimen>
+</resources>

@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Kolekcja" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:background">@color/background</item>
+        <item name="android:statusBarColor">@color/primary</item>
+    </style>
+
+    <style name="Theme.Kolekcja" parent="Base.Theme.Kolekcja" />
+
+    <style name="Base.Widget.Material3.FloatingActionButton.addButton" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="android:strokeColor">@color/background</item>
+    </style>
+</resources>
