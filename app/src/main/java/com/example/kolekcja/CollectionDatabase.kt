@@ -59,9 +59,20 @@ class CollectionDatabase(val context: Context) : SQLiteOpenHelper(context, DATAB
     fun getCompanies(id: String? = null): Cursor {
         val db: SQLiteDatabase = this.writableDatabase
         if(id==null) {
-            return db.query(COMPANY_TABLE, null, null, null, null, null, null)
+            return db.rawQuery("SELECT `$COMPANY_TABLE`.`id`, `$COMPANY_TABLE`.`name`, COUNT(`$TASTES_TABLE`.`id`) AS `Taste count` FROM `$COMPANY_TABLE` LEFT JOIN `$TASTES_TABLE` ON `$COMPANY_TABLE`.`id`=`$TASTES_TABLE`.`company_id` GROUP BY `$COMPANY_TABLE`.`id` ORDER BY `Taste count` DESC, `$COMPANY_TABLE`.`name`",null)
+            return db.query(COMPANY_TABLE, null, null, null, null, null, "name")
         }
         return db.query(COMPANY_TABLE,null,"id=?", arrayOf(id),null,null,null)
+    }
+
+    fun getTastesCount(companyId: String): String {
+        val db: SQLiteDatabase = this.writableDatabase
+        val itemsCount = db.query(TASTES_TABLE,null,"company_id=?", arrayOf(companyId),null,null,null).count
+
+        val activeItemsCursor = db.rawQuery("SELECT COUNT(*) FROM $TASTES_TABLE WHERE company_id=$companyId AND collected=1",null)
+        activeItemsCursor.moveToNext()
+        val activeItems = activeItemsCursor.getString(0)
+        return "$activeItems / $itemsCount"
     }
 
     fun removeCompany(id: String) {
@@ -84,7 +95,7 @@ class CollectionDatabase(val context: Context) : SQLiteOpenHelper(context, DATAB
     fun getTastes(company: String, id: String? = null): Cursor {
         val db = this.writableDatabase
         if(id==null) {
-            return db.query(TASTES_TABLE, null, "company_id=?", arrayOf(company),null,null,null)
+            return db.query(TASTES_TABLE, null, "company_id=?", arrayOf(company),null,null,"collected DESC, capacity DESC, name")
         }
         return db.query(TASTES_TABLE, null, "company_id=? AND id=?", arrayOf(company,id),null,null,null)
     }
